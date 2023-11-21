@@ -38,6 +38,7 @@ dependencies:
   get: ^4.6.5
   flutter_sizer: ^1.0.5
   font_awesome_flutter: ^10.6.0
+  firebase_core: ^2.22.0
 
 dev_dependencies:
   flutter_test:

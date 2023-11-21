@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_web/Constant/colors.dart';
 
 class Textformfield {
-  static Widget textformfield(String title, IconData icon, Function function) {
+  static Widget textformfield(String title, IconData icon) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
           padding: const EdgeInsets.only(left: 75),
@@ -82,7 +82,7 @@ class Textformfield {
 }
 
 class Button {
-  static buttonSave(String label, Icon icon, Function save) {
+  static buttonSave(String label, Icon icon, var save) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
       child: Container(
@@ -103,7 +103,7 @@ class Button {
             disabledBackgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
           ),
-          onPressed: () {},
+          onPressed: save,
           icon: icon,
           label: Text(label,
               style: const TextStyle(

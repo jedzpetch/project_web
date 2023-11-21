@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:project_web/Constant/colors.dart';
 import 'package:project_web/controller/login_controller.dart';
+import 'package:project_web/view/home_page.dart';
 import 'package:project_web/view/widget.dart';
 
 class LoginPage extends StatelessWidget {
@@ -26,21 +27,18 @@ class LoginPage extends StatelessWidget {
                     children: [
                       const SizedBox(height: 10),
                       const Center(
-                          child: Text(
-                        "Calorie Calculator App",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 35,
-                          color: AppColor.textbase,
-                        ),
-                      )),
+                          child: Text("Calorie Calculator App",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 35,
+                                  color: AppColor.textbase))),
                       Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Column(
                               children: [
                                 Textformfield.textformfield(
-                                    "USERNAME", Icons.account_circle, () {}),
+                                    "USERNAME", Icons.account_circle),
                                 const SizedBox(height: 20),
                                 GetX<LoginController>(
                                     init: LoginController(),
@@ -59,18 +57,17 @@ class LoginPage extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(left: 30),
                                         child: Button.buttonSave(
-                                            "Login",
-                                            Icon(
-                                              Icons.login,
+                                          "Login",
+                                          Icon(Icons.login,
                                               color: Colors.yellow.shade300,
                                               shadows: const [
                                                 Shadow(
                                                   blurRadius: 2,
                                                   color: Colors.black,
-                                                ),
-                                              ],
-                                            ),
-                                            () {})))
+                                                )
+                                              ]),
+                                          () => Get.to(() => const HomePage()),
+                                        )))
                               ],
                             ),
                             const Spacer(),
