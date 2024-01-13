@@ -6,10 +6,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: AppColor.background,
         body: SafeArea(
-            child: Text(
-      "Hello",
-      style: TextStyle(color: AppColor.black),
-    )));
+            child: Column(
+          children: [
+            Text(
+              "Hello",
+              style: TextStyle(color: AppColor.black),
+            ),
+          ],
+        )));
   }
 }
