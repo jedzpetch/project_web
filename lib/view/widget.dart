@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:project_web/Constant/colors.dart';
 
 class Textformfield {
-  static Widget textformfield(String title, IconData icon) {
+  static Widget textformfield(
+      String title, IconData icon, TextEditingController controller) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
           padding: const EdgeInsets.only(left: 75),
@@ -14,26 +15,29 @@ class Textformfield {
         SizedBox(
             width: 350,
             child: TextFormField(
+                controller: controller,
                 decoration: InputDecoration(
-              filled: true,
-              icon: Icon(icon, color: Colors.blue, size: 45),
-              labelStyle: const TextStyle(color: Colors.black),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.black)),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.black, width: 2)),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Colors.indigo, width: 2)),
-            )))
+                  filled: true,
+                  icon: Icon(icon, color: Colors.blue, size: 45),
+                  labelStyle: const TextStyle(color: Colors.black),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(color: Colors.black)),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide:
+                          const BorderSide(color: Colors.indigo, width: 2)),
+                )))
       ])
     ]);
   }
 
-  static Widget textformfieldPassWord(
-      String title, IconData icon, bool obscure, Function function) {
+  static Widget textformfieldPassWord(String title, IconData icon, bool obscure,
+      Function function, TextEditingController controller) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Padding(
           padding: const EdgeInsets.only(left: 75),
@@ -45,6 +49,7 @@ class Textformfield {
         SizedBox(
             width: 350,
             child: TextFormField(
+                controller: controller,
                 obscureText: obscure,
                 decoration: InputDecoration(
                   filled: true,

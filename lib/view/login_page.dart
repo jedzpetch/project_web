@@ -8,8 +8,9 @@ import 'package:project_web/view/widget.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-  final loginController = Get.put(LoginController());
+
   @override
+  final loginController = Get.put(LoginController());
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColor.background,
@@ -33,7 +34,9 @@ class LoginPage extends StatelessWidget {
                               children: [
                                 Column(children: [
                                   Textformfield.textformfield(
-                                      "USERNAME", Icons.account_circle),
+                                      "USERNAME",
+                                      Icons.account_circle,
+                                      loginController.emailTextController),
                                   const SizedBox(height: 20),
                                   GetX<LoginController>(
                                       init: LoginController(),
@@ -44,7 +47,9 @@ class LoginPage extends StatelessWidget {
                                                 "PASSWORD",
                                                 FontAwesomeIcons.key,
                                                 _.obscure.value,
-                                                () => _.showPassword());
+                                                () => _.showPassword(),
+                                                loginController
+                                                    .passwordTextController);
                                       }),
                                   const SizedBox(height: 20),
                                   Center(
