@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColor {
-  static const Color textbase = Color.fromARGB(255, 27, 62, 71);
-  static const Color background = Color.fromARGB(255, 160, 232, 251);
-  static const Color red = Color(0xffb22319);
-  static const Color lightred = Color(0xffe03020);
-  static const Color lightNavi = Color(0xf322334c);
-  static const Color blue = Color(0x0f1a1a37);
-  static const Color black = Color(0xff000122);
+  static const Color white = Colors.white;
+  static const Color black = Color(0xff000000);
+  static const Color platinum = Color(0xffe5e5e5);
+  static const Color green = Color(0xff83d11e);
+  static const Color orange = Color(0xfffca311);
 }

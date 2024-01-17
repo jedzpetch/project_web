@@ -2,116 +2,85 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:project_web/Constant/colors.dart';
+import 'package:project_web/Constant/font.dart';
 import 'package:project_web/controller/login_controller.dart';
-import 'package:project_web/view/home_page.dart';
-import 'package:project_web/view/widget.dart';
+import 'package:project_web/widget.dart';
+import 'package:sizer/sizer.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
-
+  final controller = Get.put(LoginController());
   @override
-  final loginController = Get.put(LoginController());
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: AppColor.background,
-        body: SafeArea(
-            child: Container(
-                decoration: const BoxDecoration(color: AppColor.blue),
-                child: Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 10),
-                          const Center(
-                              child: Text("Calorie Calculator App",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 35,
-                                      color: AppColor.textbase))),
-                          Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(children: [
-                                  Textformfield.textformfield(
-                                      "USERNAME",
-                                      Icons.account_circle,
-                                      loginController.emailTextController),
-                                  const SizedBox(height: 20),
-                                  GetX<LoginController>(
-                                      init: LoginController(),
-                                      initState: (_) {},
-                                      builder: (_) {
-                                        return Textformfield
-                                            .textformfieldPassWord(
-                                                "PASSWORD",
-                                                FontAwesomeIcons.key,
-                                                _.obscure.value,
-                                                () => _.showPassword(),
-                                                loginController
-                                                    .passwordTextController);
-                                      }),
-                                  const SizedBox(height: 20),
-                                  Center(
-                                      child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 30),
-                                          child: Button.buttonSave(
-                                            "Login",
-                                            Icon(Icons.login,
-                                                color: Colors.yellow.shade300,
-                                                shadows: const [
-                                                  Shadow(
-                                                      blurRadius: 2,
-                                                      color: Colors.black)
-                                                ]),
-                                            () =>
-                                                Get.to(() => const HomePage()),
-                                          )))
-                                ]),
-                                const Spacer(),
-                                const SizedBox(height: 20),
-                                Column(children: [
-                                  Container(
-                                      decoration: BoxDecoration(
-                                          color: AppColor.background,
-                                          border: Border.all(width: 2),
-                                          borderRadius:
-                                              BorderRadius.circular(500)),
-                                      child: const Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: Icon(
-                                              FontAwesomeIcons.personRunning,
-                                              shadows: [
-                                                Shadow(
-                                                    blurRadius: 2,
-                                                    color: Colors.black)
-                                              ],
-                                              size: 250,
-                                              color: Colors.yellowAccent))),
-                                  const SizedBox(height: 50),
-                                  const Text("Login",
-                                      style: TextStyle(
-                                          shadows: [
-                                            Shadow(
-                                                blurRadius: 2,
-                                                color: Colors.black)
-                                          ],
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 50)),
-                                  const SizedBox(height: 10),
-                                  const Text("For Admin",
-                                      style: TextStyle(
-                                          shadows: [
-                                            Shadow(
-                                                blurRadius: 2,
-                                                color: Colors.black)
-                                          ],
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 50))
-                                ])
-                              ])
-                        ])))));
+      backgroundColor: AppColor.platinum,
+      body: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 100.h,
+                width: 60.w,
+                decoration: const BoxDecoration(color: AppColor.platinum),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Dashboard KitCal",
+                          style: Font.black20B,
+                        ),
+                        Text(
+                          "For Admin",
+                          style: Font.black18B,
+                        ),
+                      ],
+                    ),
+                    Icon(Icons.settings, size: 25.w, color: AppColor.orange)
+                  ],
+                ),
+              ),
+              Container(
+                height: 100.h,
+                width: 40.w,
+                decoration: const BoxDecoration(color: AppColor.black),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "lib/asset/image/iconApp.jpg",
+                      scale: 2,
+                    ),
+                    Textformfields.fieldBlank("Email", FontAwesomeIcons.user,
+                        controller.emailTextController, AppColor.orange),
+                    SizedBox(height: 2.h),
+                    GetX<LoginController>(
+                        init: LoginController(),
+                        initState: (_) {},
+                        builder: (_) {
+                          return Textformfields.fieldPassWord(
+                              "Password",
+                              FontAwesomeIcons.lock,
+                              _.obscure.value,
+                              () => _.showPassword(),
+                              controller.passwordTextController,
+                              true);
+                        }),
+                    SizedBox(height: 2.h),
+                    Button.buttonSave("login", () => controller.login())
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
