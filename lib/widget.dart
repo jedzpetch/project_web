@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:project_web/Constant/colors.dart';
 import 'package:project_web/Constant/font.dart';
-import 'package:project_web/controller/food_controller.dart';
 import 'package:sizer/sizer.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -151,7 +150,7 @@ class Button {
             disabledBackgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
           ),
-          onPressed: save,
+          onPressed: () => save(),
           child: Text(label,
               style: const TextStyle(
                 color: AppColor.white,
@@ -201,7 +200,8 @@ class WidgetAll {
   static Widget addFood(
       String detail,
       Function function,
-      String labelButton,
+      String labelButtonok,
+      String labelButtoncancel,
       TextEditingController nemeController,
       String titelTextformfield1,
       String titelTextformfield2,
@@ -221,11 +221,17 @@ class WidgetAll {
               children: [
                 Text(detail, style: Font.white18),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 2.h),
-                    Container(child: dropdownButton),
+                    const Text("Category", style: Font.white16),
+                    Container(
+                      width: 20.w,
+                      decoration: BoxDecoration(
+                          color: AppColor.white,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Column(children: [dropdownButton]),
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -257,12 +263,16 @@ class WidgetAll {
                 ),
               ],
             )),
-        actionsAlignment: MainAxisAlignment.center,
+        actionsAlignment: MainAxisAlignment.end,
         actions: [
+          ElevatedButton(
+              onPressed: () => Get.back(),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColor.orange),
+              child: Text(labelButtoncancel, style: Font.black16)),
           ElevatedButton(
               onPressed: () => function(),
               style: ElevatedButton.styleFrom(backgroundColor: AppColor.green),
-              child: Text(labelButton, style: Font.black16))
+              child: Text(labelButtonok, style: Font.black16)),
         ]);
   }
 }

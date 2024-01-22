@@ -15,9 +15,9 @@ class LoginController extends GetxController {
   final emailTextController = TextEditingController();
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final auth = FirebaseAuth.instance;
+
   showPassword() {
     obscure.value = !obscure.value;
-    update();
   }
 
   login() async {
@@ -26,38 +26,38 @@ class LoginController extends GetxController {
       Get.dialog(WidgetAll.loading());
       try {
         await auth.signInWithEmailAndPassword(
-            email: emailTextController.text.trim(),
-            password: passwordTextController.text.trim());
+            email: emailTextController.text,
+            password: passwordTextController.text);
         DocumentSnapshot userExists = await firestore
             .collection('UserData')
             .doc(auth.currentUser!.uid)
             .get();
         if (userExists.exists) {
           Map<String, dynamic> data = userExists.data() as Map<String, dynamic>;
-          userData.add(UserModel(
-              userID: data['userID'],
-              userEmail: data["userEmail"],
-              userName: data["userName"],
-              userBirthDay: data["userBirthDay"],
-              userGender: data["userGender"],
-              userImageURL: data["userImageURL"],
-              userType: data["userType"],
-              userHigh: data["userHigh"],
-              userWeight: data["userWeight"]));
-          userData.refresh();
-        }
-        Future.delayed(const Duration(seconds: 5));
-        if (userData.isNotEmpty) {
-          bool chackType = userData.elementAt(0).userType!.contains("y");
-          if (chackType == true) {
+          if (data["userType"] == 'y') {
+            userData.add(UserModel(
+                userID: data['userID'],
+                userEmail: data["userEmail"],
+                userName: data["userName"],
+                userBirthDay: data["userBirthDay"],
+                userGender: data["userGender"],
+                userImageURL: data["userImageURL"],
+                userType: data["userType"],
+                userHigh: data["userHigh"],
+                userWeight: data["userWeight"]));
+
+            Get.to(() => HomePage());
+          } else {
+            auth.signOut();
+            Get.dialog(WidgetAll.dialog(
+              FontAwesomeIcons.x,
+              "Limit Sign In to administrators only.",
+              Colors.red,
+            ));
+            await Future.delayed(const Duration(milliseconds: 2000));
             if (Get.isDialogOpen!) {
               Get.back();
-              Get.to(() => HomePage());
             }
-          } else {
-            await auth.signOut();
-            Get.dialog(WidgetAll.dialog(FontAwesomeIcons.x,
-                "Limit Sign In to administrators only.", Colors.red));
           }
         }
       } on FirebaseAuthException catch (error) {
@@ -88,5 +88,7 @@ class LoginController extends GetxController {
               "Please Enter Email&Password", AppColor.orange),
           barrierDismissible: false);
     }
+    emailTextController.clear();
+    passwordTextController.clear();
   }
 }

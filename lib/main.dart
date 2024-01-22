@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:project_web/controller/login_controller.dart';
 import 'package:project_web/view/home_page.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +12,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final controller = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, deviceType) {
@@ -27,16 +28,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
               primaryColor: Colors.black),
-          home: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return HomePage();
-              } else {
-                return LoginPage();
-              }
-            },
-          ));
+          home: controller.userData.isEmpty ? HomePage() : LoginPage());
     });
   }
 }

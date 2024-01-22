@@ -70,19 +70,20 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 2.h),
-                      dataFrame(
+                      Obx(() => dataFrame(
                           AppColor.green,
                           "Food",
                           Icons.fastfood,
                           AppColor.orange,
-                          "Totel Munu : ",
-                          "Add Munu",
-                          "Edit Munu",
+                          "Total Menu : ${controller.foodData.length}",
+                          "Add Menu",
+                          "Edit Menu",
                           () => Get.to(() => FoodPage()),
                           () => Get.dialog(WidgetAll.addFood(
                               "Add Menu",
                               () => foodcontroller.addFood(),
-                              "done",
+                              "Save",
+                              "Cancel",
                               foodcontroller.foodName,
                               "Menu Name",
                               "Quantity",
@@ -91,23 +92,9 @@ class HomePage extends StatelessWidget {
                               foodcontroller.foodQuantity,
                               foodcontroller.foodCal,
                               foodcontroller.foodBarcode,
-                              Obx(() => DropdownButton(
-                                    dropdownColor: AppColor.black,
-                                    value: foodcontroller.selectCategory.value,
-                                    items: foodcontroller.foodCategory
-                                        .map((option) {
-                                      return DropdownMenuItem(
-                                        value: option,
-                                        child: Text(
-                                          option,
-                                          style: Font.white16,
-                                        ),
-                                      );
-                                    }).toList(),
-                                    onChanged: (value) {
-                                      foodcontroller.changeCategory(value!);
-                                    },
-                                  ))))),
+                              Obx(
+                                () => dropdown(),
+                              ))))),
                       SizedBox(height: 5.h),
                       dataFrame(
                           AppColor.orange,
@@ -189,11 +176,16 @@ class HomePage extends StatelessWidget {
 
   dropdown() {
     return DropdownButton(
+      underline: const SizedBox(),
+      borderRadius: BorderRadius.circular(20),
       value: foodcontroller.selectCategory.value,
       items: foodcontroller.foodCategory.map((option) {
         return DropdownMenuItem(
           value: option,
-          child: Text(option),
+          child: Text(
+            option,
+            style: Font.black16,
+          ),
         );
       }).toList(),
       onChanged: (value) {
