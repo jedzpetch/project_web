@@ -1,6 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
+import 'package:project_web/Constant/colors.dart';
 import 'package:project_web/controller/login_controller.dart';
+import 'package:project_web/view/exercise/exercise_page.dart';
+import 'package:project_web/view/food/food_page.dart';
 import 'package:project_web/view/home_page.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +31,22 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: true,
               primaryColor: Colors.black),
-          home: controller.userData.isEmpty ? HomePage() : LoginPage());
+          initialRoute: "/",
+          getPages: [
+            GetPage(name: "/FoodPage", page: () => const FoodPage()),
+            GetPage(name: "/ExercisePage", page: () => const ExercisePage()),
+          ],
+          home: FutureBuilder(
+            future: Firebase.initializeApp(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return controller.userData.isEmpty ? HomePage() : LoginPage();
+              }
+              return const CircularProgressIndicator(
+                color: AppColor.orange,
+              );
+            },
+          ));
     });
   }
 }

@@ -1,20 +1,20 @@
-import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
-import 'package:project_web/widget.dart';
-import 'package:pluto_grid/pluto_grid.dart';
-import 'package:project_web/Constant/font.dart';
-import 'package:project_web/Constant/colors.dart';
-import 'package:project_web/controller/food_controller.dart';
-import 'package:project_web/controller/home_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
+import 'package:project_web/Constant/colors.dart';
+import 'package:project_web/Constant/font.dart';
+import 'package:project_web/controller/exercise_controller.dart';
+import 'package:project_web/controller/home_controller.dart';
+import 'package:project_web/widget.dart';
+import 'package:sizer/sizer.dart';
 
-class FoodPage extends StatelessWidget {
-  const FoodPage({Key? key}) : super(key: key);
+class ExercisePage extends StatelessWidget {
+  const ExercisePage({super.key});
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.put(HomeController());
-    final FoodController foodController = Get.put(FoodController());
+    final homecontroller = Get.put(HomeController());
+    final controller = Get.put(ExerciseController());
     return Scaffold(
         backgroundColor: AppColor.white,
         body: SafeArea(
@@ -33,16 +33,27 @@ class FoodPage extends StatelessWidget {
                       child: const Text("Dashboard", style: Font.white18B)),
                   SizedBox(height: 2.h),
                   TextButton(
-                      onPressed: () => Get.dialog(addfood()),
-                      child: const Text("Add Menu", style: Font.white18B)),
+                      onPressed: () => Get.dialog(WidgetAll.addExercisePoses(
+                          controller.namecontroller,
+                          controller.benefitcontroller,
+                          controller.detailcontroller,
+                          controller.setortimecontroller,
+                          controller.caloriecontroller,
+                          FontAwesomeIcons.f,
+                          AppColor.orange,
+                          () => controller.uploadImage(),
+                          () => controller.uploadVideo(),
+                          controller.imagesName,
+                          controller.videoName,
+                          () => controller.addExercise())),
+                      child: const Text("Add Exercise", style: Font.white18B)),
                   const Spacer(),
                   InkWell(
-                    child: const ListTile(
-                        title: Text("Signout", style: Font.white16B),
-                        leading: Icon(FontAwesomeIcons.arrowRightFromBracket,
-                            color: AppColor.orange)),
-                    onTap: () => homeController.signout(),
-                  )
+                      child: const ListTile(
+                          title: Text("Signout", style: Font.white16B),
+                          leading: Icon(FontAwesomeIcons.arrowRightFromBracket,
+                              color: AppColor.orange)),
+                      onTap: () => homecontroller.signout())
                 ])),
             Container(
                 height: 100.h,
@@ -54,7 +65,7 @@ class FoodPage extends StatelessWidget {
                       decoration: const BoxDecoration(color: AppColor.white),
                       child: Row(children: [
                         SizedBox(width: 1.w),
-                        const Text("Food", style: Font.black30B),
+                        const Text("Exercise", style: Font.black30B),
                         const Spacer(),
                         SizedBox(
                             height: 10.h,
@@ -63,7 +74,7 @@ class FoodPage extends StatelessWidget {
                                 padding: EdgeInsets.all(2.h),
                                 child: SearchBar(
                                   onChanged: (value) =>
-                                      foodController.search(value),
+                                      controller.search(value),
                                   hintText: 'Search...',
                                   leading: const Icon(
                                       FontAwesomeIcons.magnifyingGlass),
@@ -80,55 +91,18 @@ class FoodPage extends StatelessWidget {
         ])));
   }
 
-  Widget addfood() {
-    final FoodController foodController = Get.find();
-    return WidgetAll.addFood(
-      "Add Menu",
-      () => foodController.addFood(),
-      "Save",
-      "Cancel",
-      foodController.foodName,
-      "Menu Name",
-      "Quantity",
-      "Calorie",
-      "Barcode",
-      foodController.foodQuantity,
-      foodController.foodCal,
-      foodController.foodBarcode,
-      Obx(() => dropdown(foodController)),
-    );
-  }
-
-  dropdown(FoodController foodController) {
-    return DropdownButton(
-      underline: const SizedBox(),
-      borderRadius: BorderRadius.circular(10),
-      value: foodController.selectCategory.value,
-      items: foodController.foodCategory.map((option) {
-        return DropdownMenuItem(
-            value: option,
-            child: Text(
-              option,
-              style: Font.black16,
-            ));
-      }).toList(),
-      onChanged: (value) {
-        foodController.changeCategory(value!);
-      },
-    );
-  }
-
   Widget tabledata() {
-    return GetBuilder<FoodController>(builder: (foodController) {
+    return GetBuilder<ExerciseController>(builder: (exerciseController) {
       return PlutoGrid(
-          columns: foodController.columns,
-          rows: foodController.rows,
+          columns: exerciseController.columns,
+          rows: exerciseController.rows,
           mode: PlutoGridMode.normal,
           noRowsWidget: Center(child: WidgetAll.loading()),
           configuration: const PlutoGridConfiguration(
+              style: PlutoGridStyleConfig(),
               columnSize: PlutoGridColumnSizeConfig(
-            autoSizeMode: PlutoAutoSizeMode.scale,
-          )));
+                autoSizeMode: PlutoAutoSizeMode.scale,
+              )));
     });
   }
 }

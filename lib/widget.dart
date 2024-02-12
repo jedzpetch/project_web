@@ -32,17 +32,15 @@ class Textformfields {
                       hintText: title,
                       filled: true,
                       fillColor: AppColor.platinum,
-                      prefixIcon: Icon(
-                        icon,
-                        color: iconcolor,
-                        size: 35,
-                        shadows: const [
-                          Shadow(
-                              color: AppColor.green,
-                              offset: Offset(2, 2),
-                              blurRadius: 1)
-                        ],
-                      ),
+                      prefixIcon: Icon(icon,
+                          color: iconcolor,
+                          size: 35,
+                          shadows: const [
+                            Shadow(
+                                color: AppColor.green,
+                                offset: Offset(2, 2),
+                                blurRadius: 1)
+                          ]),
                       labelStyle: const TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -217,62 +215,229 @@ class WidgetAll {
         content: SizedBox(
             height: 50.h,
             width: 80.w,
-            child: Column(
-              children: [
-                Text(detail, style: Font.white18),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 2.h),
-                    const Text("Category", style: Font.white16),
-                    Container(
-                      width: 20.w,
-                      decoration: BoxDecoration(
-                          color: AppColor.white,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Column(children: [dropdownButton]),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Textformfields.fieldBlank(
-                            titelTextformfield1,
-                            FontAwesomeIcons.a,
-                            nemeController,
-                            AppColor.orange),
-                        Textformfields.fieldBlank(
-                            titelTextformfield2,
-                            FontAwesomeIcons.b,
-                            quantityController,
-                            AppColor.orange),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Textformfields.fieldBlank(titelTextformfield3,
-                            FontAwesomeIcons.c, calController, AppColor.orange),
-                        Textformfields.fieldBlank(
-                            titelTextformfield4,
-                            FontAwesomeIcons.barcode,
-                            barcodeController,
-                            AppColor.orange),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            )),
+            child: Column(children: [
+              Row(
+                children: [
+                  Text(detail, style: Font.white18B),
+                  const Spacer(),
+                  IconButton(
+                      onPressed: () => Get.back(),
+                      icon: const Icon(
+                        FontAwesomeIcons.xmark,
+                        color: Colors.red,
+                      ))
+                ],
+              ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                SizedBox(height: 2.h),
+                const Text("Category", style: Font.white16),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                          width: 15.w,
+                          decoration: BoxDecoration(
+                              color: AppColor.white,
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Column(children: [dropdownButton])),
+                      Textformfields.fieldBlank(titelTextformfield1,
+                          FontAwesomeIcons.a, nemeController, AppColor.orange)
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Textformfields.fieldBlank(
+                          titelTextformfield2,
+                          FontAwesomeIcons.b,
+                          quantityController,
+                          AppColor.orange),
+                      Textformfields.fieldBlank(titelTextformfield3,
+                          FontAwesomeIcons.c, calController, AppColor.orange)
+                    ]),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Textformfields.fieldBlank(
+                          titelTextformfield4,
+                          FontAwesomeIcons.barcode,
+                          barcodeController,
+                          AppColor.orange)
+                    ])
+              ])
+            ])),
         actionsAlignment: MainAxisAlignment.end,
         actions: [
           ElevatedButton(
-              onPressed: () => Get.back(),
-              style: ElevatedButton.styleFrom(backgroundColor: AppColor.orange),
-              child: Text(labelButtoncancel, style: Font.black16)),
+              onPressed: () => function(),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColor.green),
+              child: Text(labelButtonok, style: Font.white18B))
+        ]);
+  }
+
+  static Widget addExercisePoses(
+      TextEditingController namecontroller,
+      TextEditingController benefitcontroller,
+      TextEditingController detailcontroller,
+      TextEditingController setortimecontroller,
+      TextEditingController caloriecontroller,
+      IconData icon,
+      Color iconcolor,
+      dynamic funtionUploadimg,
+      dynamic funtionVDO,
+      RxString imageName,
+      RxString vdoName,
+      Function function) {
+    return AlertDialog(
+        backgroundColor: AppColor.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: SizedBox(
+            height: 80.h,
+            width: 80.w,
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text("Add Exercise Poses", style: Font.white18B),
+                      const Spacer(),
+                      IconButton(
+                          onPressed: () => Get.back(),
+                          icon: const Icon(
+                            FontAwesomeIcons.xmark,
+                            color: Colors.red,
+                          ))
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Textformfields.fieldBlank("Pose", FontAwesomeIcons.a,
+                            namecontroller, AppColor.orange),
+                        Textformfields.fieldBlank(
+                            "benefits",
+                            FontAwesomeIcons.b,
+                            benefitcontroller,
+                            AppColor.orange)
+                      ]),
+                  SizedBox(height: 2.h),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Textformfields.fieldBlank(
+                            "Set or Time",
+                            FontAwesomeIcons.c,
+                            setortimecontroller,
+                            AppColor.orange),
+                        Textformfields.fieldBlank("Calorie", FontAwesomeIcons.d,
+                            caloriecontroller, AppColor.orange)
+                      ]),
+                  SizedBox(height: 2.h),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Detail", style: Font.white16),
+                              SizedBox(
+                                  height: 30.h,
+                                  width: 30.w,
+                                  child: TextFormField(
+                                      maxLines: 6,
+                                      onSaved: (value) => value!.isNotEmpty
+                                          ? detailcontroller.text = value.trim()
+                                          : null,
+                                      controller: detailcontroller,
+                                      scrollPadding: const EdgeInsets.all(1),
+                                      style: Font.black16B,
+                                      decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              vertical: 5.h),
+                                          hintText: "Detail",
+                                          filled: true,
+                                          fillColor: AppColor.platinum,
+                                          prefixIcon: Icon(icon,
+                                              color: iconcolor,
+                                              size: 35,
+                                              shadows: const [
+                                                Shadow(
+                                                    color: AppColor.green,
+                                                    offset: Offset(2, 2),
+                                                    blurRadius: 1)
+                                              ]),
+                                          labelStyle: const TextStyle(
+                                              color: Colors.white),
+                                          border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              borderSide: const BorderSide(
+                                                  color: AppColor.platinum)),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              borderSide: const BorderSide(color: AppColor.platinum, width: 2)),
+                                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: AppColor.platinum, width: 2)))))
+                            ]),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const Text("Image", style: Font.white16),
+                              Container(
+                                  height: 8.h,
+                                  width: 35.w,
+                                  decoration: BoxDecoration(
+                                      color: AppColor.white,
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Obx(() {
+                                          return Text(imageName.value);
+                                        }),
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    AppColor.orange),
+                                            onPressed: () => funtionUploadimg(),
+                                            child: const Text("Select",
+                                                style: Font.black16))
+                                      ])),
+                              SizedBox(height: 5.h),
+                              const Text("Video", style: Font.white16),
+                              Container(
+                                  height: 8.h,
+                                  width: 35.w,
+                                  decoration: BoxDecoration(
+                                      color: AppColor.white,
+                                      borderRadius: BorderRadius.circular(20)),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Obx(() {
+                                          return Text(vdoName.value);
+                                        }),
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    AppColor.orange),
+                                            onPressed: () => funtionVDO(),
+                                            child: const Text("Select",
+                                                style: Font.black16))
+                                      ])),
+                            ])
+                      ])
+                ])),
+        actions: [
           ElevatedButton(
               onPressed: () => function(),
               style: ElevatedButton.styleFrom(backgroundColor: AppColor.green),
-              child: Text(labelButtonok, style: Font.black16)),
+              child: const Text("save", style: Font.white18B))
         ]);
   }
 }
