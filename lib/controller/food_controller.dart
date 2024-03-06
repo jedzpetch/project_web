@@ -11,7 +11,7 @@ import 'package:project_web/widget.dart';
 class FoodController extends GetxController with StateMixin {
   RxBool selectAll = false.obs;
   final auth = FirebaseAuth.instance;
-  var selectCategory = "01 อาหาร".obs;
+  var selectCategory = "อาหาร".obs;
   final textSearch = TextEditingController();
   final foodCal = TextEditingController();
   final foodName = TextEditingController();
@@ -20,13 +20,24 @@ class FoodController extends GetxController with StateMixin {
   RxList<FoodModel> foodData = <FoodModel>[].obs;
   RxList<FoodModel> searchData = <FoodModel>[].obs;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  RxBool editmode = false.obs;
+  static final material1 = TextEditingController();
+  static final material2 = TextEditingController();
+  static final material3 = TextEditingController();
+  static final material4 = TextEditingController();
+  static final material5 = TextEditingController();
+  static final material6 = TextEditingController();
+  static final material7 = TextEditingController();
+  static final material8 = TextEditingController();
+  static final material9 = TextEditingController();
+  static final material10 = TextEditingController();
 
   final List<PlutoRow> rows = <PlutoRow>[].obs;
   final List<String> foodCategory = [
-    "01 อาหาร",
-    "02 เครื่องดื่ม",
-    "03 ผลไม้",
-    "04 ของทานเล่น"
+    "อาหาร",
+    "เครื่องดื่ม",
+    "ผลไม้",
+    "ของทานเล่น"
   ];
   final List<PlutoColumn> columns = [
     PlutoColumn(
@@ -67,6 +78,10 @@ class FoodController extends GetxController with StateMixin {
     await getFoodData();
     change(null, status: RxStatus.success());
     super.onInit();
+  }
+
+  changeMode() {
+    editmode.value = !editmode.value;
   }
 
   changeCategory(String value) {

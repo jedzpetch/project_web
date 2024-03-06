@@ -35,14 +35,21 @@ class FoodPage extends StatelessWidget {
                   TextButton(
                       onPressed: () => Get.dialog(addfood()),
                       child: const Text("Add Menu", style: Font.white18B)),
+                  SizedBox(height: 2.h),
+                  TextButton(
+                      onPressed: () => foodController.changeMode(),
+                      child: Obx(() => Text(
+                          foodController.editmode.isTrue
+                              ? "view mode"
+                              : "edit mode",
+                          style: Font.white18B))),
                   const Spacer(),
                   InkWell(
-                    child: const ListTile(
-                        title: Text("Signout", style: Font.white16B),
-                        leading: Icon(FontAwesomeIcons.arrowRightFromBracket,
-                            color: AppColor.orange)),
-                    onTap: () => homeController.signout(),
-                  )
+                      child: const ListTile(
+                          title: Text("Signout", style: Font.white16B),
+                          leading: Icon(FontAwesomeIcons.arrowRightFromBracket,
+                              color: AppColor.orange)),
+                      onTap: () => homeController.signout())
                 ])),
             Container(
                 height: 100.h,
@@ -101,34 +108,49 @@ class FoodPage extends StatelessWidget {
 
   dropdown(FoodController foodController) {
     return DropdownButton(
-      underline: const SizedBox(),
-      borderRadius: BorderRadius.circular(10),
-      value: foodController.selectCategory.value,
-      items: foodController.foodCategory.map((option) {
-        return DropdownMenuItem(
-            value: option,
-            child: Text(
-              option,
-              style: Font.black16,
-            ));
-      }).toList(),
-      onChanged: (value) {
-        foodController.changeCategory(value!);
-      },
-    );
+        underline: const SizedBox(),
+        borderRadius: BorderRadius.circular(10),
+        value: foodController.selectCategory.value,
+        items: foodController.foodCategory.map((option) {
+          return DropdownMenuItem(
+              value: option, child: Text(option, style: Font.black16));
+        }).toList(),
+        onChanged: (value) {
+          foodController.changeCategory(value!);
+        });
   }
 
   Widget tabledata() {
     return GetBuilder<FoodController>(builder: (foodController) {
-      return PlutoGrid(
-          columns: foodController.columns,
-          rows: foodController.rows,
-          mode: PlutoGridMode.normal,
+      List<PlutoColumn> columns = foodController.columns;
+      List<PlutoRow> rows = foodController.rows;
+      final FocusNode gridFocusNode = FocusNode();
+      PlutoGridStateManager stateManager = PlutoGridStateManager(
+          columns: columns,
+          rows: rows,
+          gridFocusNode: gridFocusNode,
+          scroll: PlutoGridScrollController());
+      for (int i = 0; i < rows.length; i++) {
+        List<PlutoCell> rowCells = [];
+        for (int j = 0; j < columns.length; j++) {
+          PlutoCell cell =
+              PlutoCell(value: rows[i].cells[columns[j].field]?.value ?? '');
+          rowCells.add(cell);
+        }
+      }
+      return Obx(() => PlutoGrid(
+          columns: columns,
+          rows: rows,
+          onChanged: (event) {
+            stateManager;
+          },
+          mode: foodController.editmode.value == true
+              ? PlutoGridMode.normal
+              : PlutoGridMode.readOnly,
           noRowsWidget: Center(child: WidgetAll.loading()),
           configuration: const PlutoGridConfiguration(
               columnSize: PlutoGridColumnSizeConfig(
-            autoSizeMode: PlutoAutoSizeMode.scale,
-          )));
+                  autoSizeMode: PlutoAutoSizeMode.scale))));
     });
   }
 }

@@ -9,7 +9,7 @@ import 'package:project_web/view/home_page.dart';
 import 'package:project_web/widget.dart';
 
 class LoginController extends GetxController {
-  RxList<UserModel> userData = <UserModel>[].obs;
+  static RxList<UserModel> userData = <UserModel>[].obs;
   RxBool obscure = true.obs;
   final passwordTextController = TextEditingController();
   final emailTextController = TextEditingController();
@@ -46,7 +46,7 @@ class LoginController extends GetxController {
                 userHigh: data["userHigh"],
                 userWeight: data["userWeight"]));
 
-            Get.to(() => HomePage());
+            Get.off(() => HomePage());
           } else {
             auth.signOut();
             Get.dialog(WidgetAll.dialog(

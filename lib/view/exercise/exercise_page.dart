@@ -39,14 +39,19 @@ class ExercisePage extends StatelessWidget {
                           controller.detailcontroller,
                           controller.setortimecontroller,
                           controller.caloriecontroller,
-                          FontAwesomeIcons.f,
-                          AppColor.orange,
                           () => controller.uploadImage(),
                           () => controller.uploadVideo(),
                           controller.imagesName,
                           controller.videoName,
                           () => controller.addExercise())),
                       child: const Text("Add Exercise", style: Font.white18B)),
+                  TextButton(
+                      onPressed: () => controller.changeMode(),
+                      child: Obx(() => Text(
+                          controller.editmode.isTrue
+                              ? "view mode"
+                              : "edit mode",
+                          style: Font.white18B))),
                   const Spacer(),
                   InkWell(
                       child: const ListTile(
@@ -83,7 +88,7 @@ class ExercisePage extends StatelessWidget {
                                           AppColor.platinum),
                                   shadowColor: const MaterialStatePropertyAll(
                                       AppColor.black),
-                                ))),
+                                )))
                       ])),
                   Expanded(child: tabledata())
                 ]))
@@ -93,16 +98,18 @@ class ExercisePage extends StatelessWidget {
 
   Widget tabledata() {
     return GetBuilder<ExerciseController>(builder: (exerciseController) {
-      return PlutoGrid(
+      return Obx(() => PlutoGrid(
           columns: exerciseController.columns,
           rows: exerciseController.rows,
-          mode: PlutoGridMode.normal,
+          mode: exerciseController.editmode.isTrue
+              ? PlutoGridMode.normal
+              : PlutoGridMode.readOnly,
           noRowsWidget: Center(child: WidgetAll.loading()),
           configuration: const PlutoGridConfiguration(
               style: PlutoGridStyleConfig(),
               columnSize: PlutoGridColumnSizeConfig(
                 autoSizeMode: PlutoAutoSizeMode.scale,
-              )));
+              ))));
     });
   }
 }

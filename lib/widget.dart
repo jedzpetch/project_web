@@ -3,60 +3,100 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:project_web/Constant/colors.dart';
 import 'package:project_web/Constant/font.dart';
+import 'package:project_web/controller/food_controller.dart';
 import 'package:sizer/sizer.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Textformfields {
-  static Widget fieldBlank(String title, IconData icon,
+  static Widget fieldBlankWithIcon(String title, IconData icon,
       TextEditingController textEditingController, Color iconcolor) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Padding(padding: EdgeInsets.only(left: 75)),
       const SizedBox(height: 5),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         SizedBox(
-            width: 35.w,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: Font.white16),
-                TextFormField(
-                    validator: (String? value) =>
-                        value!.isEmpty ? "Please fill out information" : null,
-                    onSaved: (value) => value!.isNotEmpty
-                        ? textEditingController.text = value.trim()
-                        : null,
-                    controller: textEditingController,
-                    scrollPadding: const EdgeInsets.all(1),
-                    style: Font.black16B,
-                    decoration: InputDecoration(
-                      hintText: title,
-                      filled: true,
-                      fillColor: AppColor.platinum,
-                      prefixIcon: Icon(icon,
-                          color: iconcolor,
-                          size: 35,
-                          shadows: const [
-                            Shadow(
-                                color: AppColor.green,
-                                offset: Offset(2, 2),
-                                blurRadius: 1)
-                          ]),
-                      labelStyle: const TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide:
-                              const BorderSide(color: AppColor.platinum)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(
-                              color: AppColor.platinum, width: 2)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: const BorderSide(
-                              color: AppColor.platinum, width: 2)),
-                    )),
-              ],
-            ))
+            width: 25.w,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: Font.white16),
+              TextFormField(
+                  validator: (String? value) =>
+                      value!.isEmpty ? "Please fill out information" : null,
+                  onSaved: (value) => value!.isNotEmpty
+                      ? textEditingController.text = value.trim()
+                      : null,
+                  controller: textEditingController,
+                  scrollPadding: const EdgeInsets.all(1),
+                  style: Font.black16B,
+                  decoration: InputDecoration(
+                    hintText: title,
+                    filled: true,
+                    fillColor: AppColor.platinum,
+                    prefixIcon: Icon(icon,
+                        color: iconcolor,
+                        size: 35,
+                        shadows: const [
+                          Shadow(
+                              color: AppColor.green,
+                              offset: Offset(2, 2),
+                              blurRadius: 1)
+                        ]),
+                    labelStyle: const TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(color: AppColor.platinum)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                            color: AppColor.platinum, width: 2)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                            color: AppColor.platinum, width: 2)),
+                  ))
+            ]))
+      ])
+    ]);
+  }
+
+  static Widget fieldBlank(
+      String title, TextEditingController textEditingController) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      const Padding(padding: EdgeInsets.only(left: 75)),
+      const SizedBox(height: 5),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        SizedBox(
+            width: 25.w,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(title, style: Font.white16),
+              TextFormField(
+                  validator: (String? value) =>
+                      value!.isEmpty ? "Please fill out information" : null,
+                  onSaved: (value) => value!.isNotEmpty
+                      ? textEditingController.text = value.trim()
+                      : null,
+                  controller: textEditingController,
+                  scrollPadding: const EdgeInsets.all(1),
+                  style: Font.black16B,
+                  decoration: InputDecoration(
+                    hintText: title,
+                    filled: true,
+                    fillColor: AppColor.platinum,
+                    labelStyle: const TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(color: AppColor.platinum)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                            color: AppColor.platinum, width: 2)),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                            color: AppColor.platinum, width: 2)),
+                  ))
+            ]))
       ])
     ]);
   }
@@ -73,11 +113,11 @@ class Textformfields {
       const SizedBox(height: 5),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         SizedBox(
-            width: 35.w,
+            width: 25.w,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Password", style: Font.white16),
+                const Text("รหัสผ่าน", style: Font.white16),
                 TextFormField(
                     onSaved: (value) => value!.isNotEmpty
                         ? textEditingController.text = value.trim()
@@ -172,12 +212,12 @@ class WidgetAll {
     return Builder(builder: (context) {
       Future.delayed(const Duration(seconds: 1), () => Get.back());
       return AlertDialog(
-        backgroundColor: AppColor.black,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Icon(icon, color: iconcolor, size: 50),
-        content: Text(detail, style: Font.white18),
-        actionsAlignment: MainAxisAlignment.center,
-      );
+          backgroundColor: AppColor.black,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Icon(icon, color: iconcolor, size: 50),
+          content: Text(detail, style: Font.white18),
+          actionsAlignment: MainAxisAlignment.center);
     });
   }
 
@@ -191,7 +231,7 @@ class WidgetAll {
                 children: [
               LoadingAnimationWidget.threeRotatingDots(
                   color: AppColor.orange, size: 100),
-              const Text("loading...", style: Font.white18B)
+              const Text("กำลังโหลด...", style: Font.white18B)
             ])));
   }
 
@@ -213,57 +253,58 @@ class WidgetAll {
         backgroundColor: AppColor.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         content: SizedBox(
-            height: 50.h,
-            width: 80.w,
-            child: Column(children: [
+            height: 45.h,
+            width: 55.w,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(children: [
+                Text(detail, style: Font.white18B),
+                const Spacer(),
+                IconButton(
+                    onPressed: () => Get.back(),
+                    icon: const Icon(FontAwesomeIcons.xmark, color: Colors.red))
+              ]),
+              SizedBox(height: 2.h),
               Row(
-                children: [
-                  Text(detail, style: Font.white18B),
-                  const Spacer(),
-                  IconButton(
-                      onPressed: () => Get.back(),
-                      icon: const Icon(
-                        FontAwesomeIcons.xmark,
-                        color: Colors.red,
-                      ))
-                ],
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                SizedBox(height: 2.h),
-                const Text("Category", style: Font.white16),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                          width: 15.w,
-                          decoration: BoxDecoration(
-                              color: AppColor.white,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Column(children: [dropdownButton])),
-                      Textformfields.fieldBlank(titelTextformfield1,
-                          FontAwesomeIcons.a, nemeController, AppColor.orange)
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Textformfields.fieldBlank(
-                          titelTextformfield2,
-                          FontAwesomeIcons.b,
-                          quantityController,
-                          AppColor.orange),
-                      Textformfields.fieldBlank(titelTextformfield3,
-                          FontAwesomeIcons.c, calController, AppColor.orange)
-                    ]),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Textformfields.fieldBlank(
-                          titelTextformfield4,
-                          FontAwesomeIcons.barcode,
-                          barcodeController,
-                          AppColor.orange)
-                    ])
-              ])
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("หมวดหมู่อาหาร", style: Font.white16),
+                          Container(
+                              width: 10.w,
+                              decoration: BoxDecoration(
+                                  color: AppColor.white,
+                                  borderRadius: BorderRadius.circular(20)),
+                              child: Column(children: [dropdownButton])),
+                          SizedBox(height: 2.h),
+                          Textformfields.fieldBlank(
+                              titelTextformfield2, quantityController),
+                          SizedBox(height: 2.h),
+                          Textformfields.fieldBlank(
+                              titelTextformfield4, barcodeController)
+                        ]),
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Textformfields.fieldBlank(
+                              titelTextformfield1, nemeController),
+                          SizedBox(height: 1.h),
+                          Textformfields.fieldBlank(
+                              titelTextformfield3, calController),
+                          SizedBox(height: 6.h),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColor.orange),
+                              onPressed: () => Get.dialog(addMaterial()),
+                              child: const Text("เพิ่มส่วนประกอบของเมนู",
+                                  style: Font.white20))
+                        ]),
+                  ])
             ])),
         actionsAlignment: MainAxisAlignment.end,
         actions: [
@@ -274,14 +315,62 @@ class WidgetAll {
         ]);
   }
 
+  static Widget addMaterial() {
+    return AlertDialog(
+        backgroundColor: AppColor.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: SizedBox(
+            height: 62.5.h,
+            width: 60.w,
+            child: Column(children: [
+              Row(children: [
+                const Text("เพิ่มส่วนประกอบ", style: Font.white18B),
+                const Spacer(),
+                IconButton(
+                    onPressed: () => Get.back(),
+                    icon: const Icon(FontAwesomeIcons.xmark, color: Colors.red))
+              ]),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                Column(children: [
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 1", FoodController.material1),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 2", FoodController.material2),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 3", FoodController.material3),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 4", FoodController.material4),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 5", FoodController.material5)
+                ]),
+                Column(children: [
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 6", FoodController.material6),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 7", FoodController.material7),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 8", FoodController.material8),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 9", FoodController.material9),
+                  Textformfields.fieldBlank(
+                      "ส่วนประกอบที่ 10", FoodController.material10)
+                ])
+              ])
+            ])),
+        actions: [
+          ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(backgroundColor: AppColor.green),
+              child: const Text("บันทึก", style: Font.white18B))
+        ]);
+  }
+
   static Widget addExercisePoses(
       TextEditingController namecontroller,
       TextEditingController benefitcontroller,
       TextEditingController detailcontroller,
       TextEditingController setortimecontroller,
       TextEditingController caloriecontroller,
-      IconData icon,
-      Color iconcolor,
       dynamic funtionUploadimg,
       dynamic funtionVDO,
       RxString imageName,
@@ -291,60 +380,41 @@ class WidgetAll {
         backgroundColor: AppColor.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         content: SizedBox(
-            height: 80.h,
-            width: 80.w,
+            height: 62.5.h,
+            width: 60.w,
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text("Add Exercise Poses", style: Font.white18B),
-                      const Spacer(),
-                      IconButton(
-                          onPressed: () => Get.back(),
-                          icon: const Icon(
-                            FontAwesomeIcons.xmark,
-                            color: Colors.red,
-                          ))
-                    ],
-                  ),
-                  SizedBox(height: 5.h),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Textformfields.fieldBlank("Pose", FontAwesomeIcons.a,
-                            namecontroller, AppColor.orange),
-                        Textformfields.fieldBlank(
-                            "benefits",
-                            FontAwesomeIcons.b,
-                            benefitcontroller,
-                            AppColor.orange)
+                        const Text("เพิ่มท่าออกกำลังกาย", style: Font.white18B),
+                        const Spacer(),
+                        IconButton(
+                            onPressed: () => Get.back(),
+                            icon: const Icon(FontAwesomeIcons.xmark,
+                                color: Colors.red))
                       ]),
-                  SizedBox(height: 2.h),
                   Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Textformfields.fieldBlank(
-                            "Set or Time",
-                            FontAwesomeIcons.c,
-                            setortimecontroller,
-                            AppColor.orange),
-                        Textformfields.fieldBlank("Calorie", FontAwesomeIcons.d,
-                            caloriecontroller, AppColor.orange)
-                      ]),
-                  SizedBox(height: 2.h),
-                  Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Detail", style: Font.white16),
+                              Textformfields.fieldBlank(
+                                  "ท่าออกกำลังกาย", namecontroller),
+                              SizedBox(height: 2.h),
+                              Textformfields.fieldBlank(
+                                  "จำนวนครั้งหรือระยะเวลา",
+                                  setortimecontroller),
+                              SizedBox(height: 2.h),
+                              const Text("รายละเอียด", style: Font.white16),
                               SizedBox(
                                   height: 30.h,
-                                  width: 30.w,
+                                  width: 25.w,
                                   child: TextFormField(
                                       maxLines: 6,
                                       onSaved: (value) => value!.isNotEmpty
@@ -356,18 +426,8 @@ class WidgetAll {
                                       decoration: InputDecoration(
                                           contentPadding: EdgeInsets.symmetric(
                                               vertical: 5.h),
-                                          hintText: "Detail",
                                           filled: true,
                                           fillColor: AppColor.platinum,
-                                          prefixIcon: Icon(icon,
-                                              color: iconcolor,
-                                              size: 35,
-                                              shadows: const [
-                                                Shadow(
-                                                    color: AppColor.green,
-                                                    offset: Offset(2, 2),
-                                                    blurRadius: 1)
-                                              ]),
                                           labelStyle: const TextStyle(
                                               color: Colors.white),
                                           border: OutlineInputBorder(
@@ -378,17 +438,28 @@ class WidgetAll {
                                           enabledBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20),
-                                              borderSide: const BorderSide(color: AppColor.platinum, width: 2)),
-                                          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: const BorderSide(color: AppColor.platinum, width: 2)))))
+                                              borderSide: const BorderSide(
+                                                  color: AppColor.platinum,
+                                                  width: 2)),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              borderSide: const BorderSide(color: AppColor.platinum, width: 2)))))
                             ]),
                         Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              const Text("Image", style: Font.white16),
+                              Textformfields.fieldBlank(
+                                  "ประโยชน์", benefitcontroller),
+                              SizedBox(height: 2.h),
+                              Textformfields.fieldBlank(
+                                  "แคลอรี่", caloriecontroller),
+                              SizedBox(height: 2.h),
+                              const Text("รูปภาพ", style: Font.white16),
                               Container(
-                                  height: 8.h,
-                                  width: 35.w,
+                                  height: 7.h,
+                                  width: 20.w,
                                   decoration: BoxDecoration(
                                       color: AppColor.white,
                                       borderRadius: BorderRadius.circular(20)),
@@ -404,14 +475,14 @@ class WidgetAll {
                                                 backgroundColor:
                                                     AppColor.orange),
                                             onPressed: () => funtionUploadimg(),
-                                            child: const Text("Select",
-                                                style: Font.black16))
+                                            child: const Text("เลือก",
+                                                style: Font.black16)),
                                       ])),
-                              SizedBox(height: 5.h),
-                              const Text("Video", style: Font.white16),
+                              SizedBox(height: 2.h),
+                              const Text("วีดีโอ", style: Font.white16),
                               Container(
                                   height: 8.h,
-                                  width: 35.w,
+                                  width: 20.w,
                                   decoration: BoxDecoration(
                                       color: AppColor.white,
                                       borderRadius: BorderRadius.circular(20)),
@@ -427,17 +498,17 @@ class WidgetAll {
                                                 backgroundColor:
                                                     AppColor.orange),
                                             onPressed: () => funtionVDO(),
-                                            child: const Text("Select",
+                                            child: const Text("เลือก",
                                                 style: Font.black16))
-                                      ])),
-                            ])
+                                      ]))
+                            ]),
                       ])
                 ])),
         actions: [
           ElevatedButton(
               onPressed: () => function(),
               style: ElevatedButton.styleFrom(backgroundColor: AppColor.green),
-              child: const Text("save", style: Font.white18B))
+              child: const Text("บันทึก", style: Font.white18B))
         ]);
   }
 }

@@ -15,12 +15,11 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-  final controller = Get.put(LoginController());
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, deviceType) {
@@ -33,20 +32,12 @@ class MyApp extends StatelessWidget {
               primaryColor: Colors.black),
           initialRoute: "/",
           getPages: [
+            GetPage(name: "/login", page: () => LoginPage()),
+            GetPage(name: "/HomePage", page: () => HomePage()),
             GetPage(name: "/FoodPage", page: () => const FoodPage()),
             GetPage(name: "/ExercisePage", page: () => const ExercisePage()),
           ],
-          home: FutureBuilder(
-            future: Firebase.initializeApp(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return controller.userData.isEmpty ? HomePage() : LoginPage();
-              }
-              return const CircularProgressIndicator(
-                color: AppColor.orange,
-              );
-            },
-          ));
+          home: LoginPage());
     });
   }
 }

@@ -8,12 +8,12 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:project_web/Constant/colors.dart';
-import 'package:project_web/model/exercise_mobel.dart';
+import 'package:project_web/model/exercise_model.dart';
 import 'package:project_web/widget.dart';
 
 class ExerciseController extends GetxController with StateMixin {
-  var exercideData = <ExerciseMobel>[].obs;
-  RxList<ExerciseMobel> searchData = <ExerciseMobel>[].obs;
+  var exercideData = <ExerciseModel>[].obs;
+  RxList<ExerciseModel> searchData = <ExerciseModel>[].obs;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final picker = ImagePicker();
   final storage = FirebaseStorage.instance;
@@ -23,8 +23,8 @@ class ExerciseController extends GetxController with StateMixin {
   final caloriecontroller = TextEditingController();
   final benefitcontroller = TextEditingController();
   final setortimecontroller = TextEditingController();
-  RxString imagesName = RxString("Upload Images");
-  RxString videoName = RxString("Upload Video");
+  RxString imagesName = RxString("อัพโหลดรูปภาพ");
+  RxString videoName = RxString("อัพโหลดวีดีโอ");
   String? imgUrl;
   String? vdoUrl;
   final List<PlutoRow> rows = <PlutoRow>[].obs;
@@ -60,6 +60,7 @@ class ExerciseController extends GetxController with StateMixin {
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
   ].obs;
+  RxBool editmode = false.obs;
 
   @override
   void onInit() async {
@@ -67,6 +68,10 @@ class ExerciseController extends GetxController with StateMixin {
     await getExerciseData();
     change(null, status: RxStatus.success());
     super.onInit();
+  }
+
+  changeMode() {
+    editmode.value = !editmode.value;
   }
 
   void updateRows() async {
@@ -108,7 +113,7 @@ class ExerciseController extends GetxController with StateMixin {
         await firestore.collection("ExerciseData").get();
     List<DocumentSnapshot> docs = querySnapshot.docs;
     exercideData.assignAll(docs.map((data) {
-      return ExerciseMobel(
+      return ExerciseModel(
         nameExercise: data["nameExercise"],
         calExercise: data["calExercise"],
         detailExercise: data["detailExercise"],
