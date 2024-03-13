@@ -5,12 +5,13 @@ import 'package:pluto_grid/pluto_grid.dart';
 import 'package:project_web/Constant/colors.dart';
 import 'package:project_web/Constant/font.dart';
 import 'package:project_web/controller/exercise_controller.dart';
-import 'package:project_web/controller/home_controller.dart';
 import 'package:project_web/widget.dart';
 import 'package:sizer/sizer.dart';
 
-class ExercisePage extends StatelessWidget {
-  ExercisePage({super.key});
+import '../../controller/home_controller.dart';
+
+class EditExercisePage extends StatelessWidget {
+  EditExercisePage({super.key});
   final homecontroller = Get.put(HomeController());
   final controller = Get.put(ExerciseController());
   @override
@@ -49,7 +50,15 @@ class ExercisePage extends StatelessWidget {
                   SizedBox(height: 2.h),
                   TextButton(
                       onPressed: () => controller.changeMode(),
-                      child: const Text("แก้ไข", style: Font.white18B)),
+                      child: const Text("อ่าน", style: Font.white18B)),
+                  SizedBox(height: 2.h),
+                  TextButton(
+                      onPressed: () {},
+                      child: const Text("ลบข้อมูล",
+                          style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18))),
                   const Spacer(),
                   InkWell(
                       child: const ListTile(
@@ -91,42 +100,60 @@ class ExercisePage extends StatelessWidget {
                   Expanded(
                       child: controller.exercideData.isNotEmpty
                           ? buildTableData()
-                          : const Center(child: Text("ไม่มีข้อมูล")))
+                          : const Center(
+                              child: Text("ไม่มีข้อมูล"),
+                            ))
                 ]))
           ])
         ])));
   }
 
   Widget buildTableData() {
-    return GetBuilder<ExerciseController>(builder: (exercisecontroller) {
-      List<PlutoColumn> columns = exercisecontroller.columns;
-      List<PlutoRow> rows = exercisecontroller.rows;
+    return GetBuilder<ExerciseController>(builder: (controller) {
+      List<PlutoColumn> columns = controller.columns;
+      List<PlutoRow> rows = controller.rows;
       List<DataRow> dataRows = [];
       for (int i = 0; i < rows.length; i++) {
         List<DataCell> dataCells = [];
         for (int j = 0; j < columns.length; j++) {
           final PlutoCell cell =
               rows[i].cells[columns[j].field] ?? PlutoCell(value: '');
-          dataCells.add(DataCell(Text(cell.value.toString(),
-              style: const TextStyle(color: Colors.black))));
+          if (j == columns.length - 1) {
+            // เช็คว่าเป็น cell สุดท้ายหรือไม่
+            dataCells.add(DataCell(TextButton(
+                onPressed: () {
+                  controller.deleteDataFromFirebase(i);
+                },
+                child: Text(cell.value, style: Font.red16))));
+          } else {
+            dataCells.add(DataCell(
+              TextField(
+                controller: TextEditingController(text: cell.value),
+                onChanged: (value) {
+                  controller.editCell(i, columns[j].field, value);
+                },
+              ),
+              onDoubleTap: () {
+                controller.viewDetail(cell.value, i, columns[j].field);
+              },
+            ));
+          }
         }
         dataRows.add(DataRow(cells: dataCells));
       }
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
+          border: TableBorder.all(width: 1.5, color: AppColor.black),
           columns: columns
               .map((column) => DataColumn(
-                  label: Text(column.title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20)),
-                  numeric: column.type == PlutoColumnType.number))
+                    label: Text(column.title, style: Font.black20B),
+                    numeric: column.type == PlutoColumnType.number,
+                  ))
               .toList(),
           rows: dataRows,
           headingRowHeight: 60,
-          columnSpacing: 1.w,
-          dividerThickness: 1.5,
-          border: TableBorder.all(width: 1.5, color: AppColor.black),
+          columnSpacing: 9.5.w,
         ),
       );
     });

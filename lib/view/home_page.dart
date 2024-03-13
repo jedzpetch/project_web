@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
                               "จำนวนท่าออกกำลังกาย : ${controller.exerciseData.length}",
                               "เพิ่มท่าออกกำลังกาย",
                               "แก้ไขท่าออกกำลังกาย",
-                              () => Get.to(() => const ExercisePage()),
+                              () => Get.to(() => ExercisePage()),
                               () => Get.dialog(WidgetAll.addExercisePoses(
                                   execisecontroller.namecontroller,
                                   execisecontroller.benefitcontroller,
@@ -81,7 +81,7 @@ class HomePage extends StatelessWidget {
                                   execisecontroller.videoName,
                                   () => execisecontroller.addExercise())), () {
                             execisecontroller.changeMode();
-                            Get.to(() => const ExercisePage());
+                            Get.to(() => ExercisePage());
                           }))
                     ],
                   ),
@@ -174,7 +174,7 @@ class HomePage extends StatelessWidget {
       dynamic editfunction) {
     return InkWell(
       child: Container(
-          height: 32.h,
+          height: 35.h,
           width: 45.w,
           decoration: BoxDecoration(
               color: backgroudcolor,

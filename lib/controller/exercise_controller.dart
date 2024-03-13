@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:project_web/Constant/colors.dart';
 import 'package:project_web/model/exercise_model.dart';
+import 'package:project_web/view/exercise/editexercise_page.dart';
+import 'package:project_web/view/exercise/exercise_page.dart';
 import 'package:project_web/widget.dart';
 
 class ExerciseController extends GetxController with StateMixin {
@@ -30,37 +32,38 @@ class ExerciseController extends GetxController with StateMixin {
   final List<PlutoRow> rows = <PlutoRow>[].obs;
   final List<PlutoColumn> columns = [
     PlutoColumn(
-        title: "Name",
-        field: "name",
+        title: "ชื่อ",
+        field: "nameExercise",
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "Benefits",
-        field: "benefits",
+        title: "ประโยชน์",
+        field: "benefitsExercise",
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "SetorTime",
-        field: "setortime",
+        title: "ระยะเวลา / จำนวน",
+        field: "setORtimeExercise",
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "Calorie",
-        field: "calorie",
+        title: "แคลอรี่",
+        field: "calExercise",
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "Detail",
-        field: "detail",
+        title: "ลบ",
+        field: "deleteIcon",
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
   ].obs;
   RxBool editmode = false.obs;
+  RxList docid = [].obs;
 
   @override
   void onInit() async {
@@ -72,26 +75,113 @@ class ExerciseController extends GetxController with StateMixin {
 
   changeMode() {
     editmode.value = !editmode.value;
+    if (editmode.isTrue) {
+      Get.to(() => (ExercisePage()));
+    } else {
+      Get.to(() => EditExercisePage());
+    }
+  }
+
+  void viewDetail(String cellValue, int rowIndex, String columnName) {
+    detailExercise(cellValue, rowIndex, columnName);
+  }
+
+  detailExercise(String cellValue, int rowIndex, String columnName) async {
+    if (exercideData.isNotEmpty) {
+      final cells = Map<String, PlutoCell>.from(rows[rowIndex].cells);
+      namecontroller.text = cells["nameExercise"]!.value;
+      benefitcontroller.text = cells["benefitsExercise"]!.value;
+      detailcontroller.text = cells["detailExercise"]!.value;
+      setortimecontroller.text = cells["setORtimeExercise"]!.value;
+      caloriecontroller.text = cells["calExercise"]!.value;
+      Get.dialog(WidgetAll.addExercisePoses(
+          namecontroller,
+          benefitcontroller,
+          detailcontroller,
+          setortimecontroller,
+          caloriecontroller,
+          () => uploadImage(),
+          () => uploadVideo(),
+          imagesName,
+          videoName,
+          () => updateDataForDetail(rowIndex)));
+    }
+  }
+
+  updateDataForDetail(int index) async {
+    if (namecontroller.text.isNotEmpty &&
+        detailcontroller.text.isNotEmpty &&
+        caloriecontroller.text.isNotEmpty &&
+        benefitcontroller.text.isNotEmpty &&
+        setortimecontroller.text.isNotEmpty) {
+      await FirebaseFirestore.instance
+          .collection('ExerciseData')
+          .doc(docid[index])
+          .update({
+        'nameExercise': namecontroller.text,
+        'detailExercise': detailcontroller.text,
+        'calExercise': caloriecontroller.text,
+        'benefitsExercise': benefitcontroller.text,
+        'setORtimeExercise': setortimecontroller.text,
+      });
+      await getExerciseData();
+      update();
+    }
+  }
+
+  void editRow(int rowIndex, Map<String, PlutoCell> newCells) {
+    rows[rowIndex].cells.assignAll(newCells);
+  }
+
+  editCell(int rowIndex, String columnName, String? newValue) async {
+    if (newValue != null) {
+      final updatedCells = Map<String, PlutoCell>.from(rows[rowIndex].cells);
+      updatedCells[columnName]!.value = newValue;
+      editRow(rowIndex, updatedCells);
+      Map<String, dynamic> data = {
+        columnName: newValue,
+      };
+
+      await updateData(data, rowIndex);
+    } else {}
+  }
+
+  Future<void> deleteDataFromFirebase(int index) async {
+    await FirebaseFirestore.instance
+        .collection('ExerciseData')
+        .doc(docid[index])
+        .delete();
+    getExerciseData();
+  }
+
+  updateData(Map<String, dynamic>? data, int index) async {
+    if (data != null) {
+      await FirebaseFirestore.instance
+          .collection('ExerciseData')
+          .doc(docid[index])
+          .update(data);
+    } else {}
   }
 
   void updateRows() async {
     rows.assignAll(searchData.isEmpty
         ? exercideData.map((data) {
             return PlutoRow(cells: {
-              'name': PlutoCell(value: data.nameExercise),
-              'benefits': PlutoCell(value: data.benefitsExercise),
-              'setortime': PlutoCell(value: data.setORtimeExercise),
-              'calorie': PlutoCell(value: data.calExercise),
-              'detail': PlutoCell(value: data.detailExercise),
+              'nameExercise': PlutoCell(value: data.nameExercise),
+              'benefitsExercise': PlutoCell(value: data.benefitsExercise),
+              'setORtimeExercise': PlutoCell(value: data.setORtimeExercise),
+              'calExercise': PlutoCell(value: data.calExercise),
+              'detailExercise': PlutoCell(value: data.detailExercise),
+              'deleteIcon': PlutoCell(value: "ลบ")
             });
           }).toList()
         : searchData.map((data) {
             return PlutoRow(cells: {
-              'name': PlutoCell(value: data.nameExercise),
-              'benefits': PlutoCell(value: data.benefitsExercise),
-              'setortime': PlutoCell(value: data.setORtimeExercise),
-              'calorie': PlutoCell(value: data.calExercise),
-              'detail': PlutoCell(value: data.detailExercise),
+              'nameExercise': PlutoCell(value: data.nameExercise),
+              'benefitsExercise': PlutoCell(value: data.benefitsExercise),
+              'setORtimeExercise': PlutoCell(value: data.setORtimeExercise),
+              'calExercise': PlutoCell(value: data.calExercise),
+              'detailExercise': PlutoCell(value: data.detailExercise),
             });
           }).toList());
     update();
@@ -112,6 +202,10 @@ class ExerciseController extends GetxController with StateMixin {
     QuerySnapshot querySnapshot =
         await firestore.collection("ExerciseData").get();
     List<DocumentSnapshot> docs = querySnapshot.docs;
+    for (var doc in docs) {
+      var id = doc.id;
+      docid.add(id);
+    }
     exercideData.assignAll(docs.map((data) {
       return ExerciseModel(
         nameExercise: data["nameExercise"],

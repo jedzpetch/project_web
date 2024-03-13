@@ -1,6 +1,5 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:get/get.dart';
+import 'package:project_web/view/home_page.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:project_web/widget.dart';
@@ -11,24 +10,27 @@ import 'package:project_web/controller/food_controller.dart';
 import 'package:project_web/controller/home_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class FoodPage extends StatelessWidget {
-  const FoodPage({Key? key}) : super(key: key);
+class EditFoodPage extends StatelessWidget {
+  const EditFoodPage({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    // ignore:
     final HomeController homeController = Get.put(HomeController());
     final FoodController foodController = Get.put(FoodController());
     return Scaffold(
         backgroundColor: AppColor.white,
         body: SafeArea(
             child: Column(children: [
-          Row(children: [buildSidebar(), buildMainContent()])
+          Row(children: [
+            buildSidebar(),
+            buildMainContent(),
+          ])
         ])));
   }
 
   Widget buildSidebar() {
     final HomeController homeController = Get.find();
     final FoodController foodController = Get.find();
+
     return Container(
         height: 100.h,
         width: 20.w,
@@ -38,7 +40,7 @@ class FoodPage extends StatelessWidget {
           Image.asset("lib/asset/image/iconApp.jpg", scale: 2),
           SizedBox(height: 5.h),
           TextButton(
-              onPressed: () => Get.back(),
+              onPressed: () => Get.to(() => HomePage()),
               child: const Text("หน้าหลัก", style: Font.white18B)),
           SizedBox(height: 2.h),
           TextButton(
@@ -47,7 +49,15 @@ class FoodPage extends StatelessWidget {
           SizedBox(height: 2.h),
           TextButton(
               onPressed: () => foodController.changeMode(),
-              child: const Text("แก้ไข", style: Font.white18B)),
+              child: const Text("ดูข้อมูล", style: Font.white18B)),
+          SizedBox(height: 2.h),
+          TextButton(
+              onPressed: () {},
+              child: const Text("ลบข้อมูล",
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18))),
           const Spacer(),
           InkWell(
               onTap: () => homeController.signout(),
@@ -87,8 +97,12 @@ class FoodPage extends StatelessWidget {
                             shadowColor: const MaterialStatePropertyAll(
                                 AppColor.black))))
               ])),
-          SizedBox(height: 2.h),
-          Expanded(child: buildTableData())
+          Expanded(
+              child: foodController.foodData.isNotEmpty
+                  ? buildTableData()
+                  : const Center(
+                      child: Text("ไม่มีข้อมูล"),
+                    ))
         ]));
   }
 
@@ -100,9 +114,14 @@ class FoodPage extends StatelessWidget {
       for (int i = 0; i < rows.length; i++) {
         List<DataCell> dataCells = [];
         for (int j = 0; j < columns.length; j++) {
-          dataCells.add(DataCell(Text(
-            rows[i].cells[columns[j].field]?.value ?? '',
-          )));
+          final PlutoCell cell =
+              rows[i].cells[columns[j].field] ?? PlutoCell(value: '');
+          dataCells.add(DataCell(TextField(
+              readOnly: foodController.editmode.value,
+              controller: TextEditingController(text: cell.value),
+              onChanged: (value) {
+                foodController.editCell(i, columns[j].field, value);
+              })));
         }
         dataRows.add(DataRow(cells: dataCells));
       }
@@ -117,26 +136,27 @@ class FoodPage extends StatelessWidget {
                   .toList(),
               rows: dataRows,
               headingRowHeight: 60,
-              columnSpacing: 100));
+              columnSpacing: 9.5.w));
     });
   }
 
   Widget addfood() {
     final FoodController foodController = Get.find();
     return WidgetAll.addFood(
-        "เพิ่มเมนูอาหาร",
-        () => foodController.addFood(),
-        "บันทึก",
-        "ยกเลิก",
-        foodController.foodName,
-        "ชื่อเมนู",
-        "ปริมาณ",
-        "แคลอรี่",
-        "บาร์โค้ด (ถ้ามี)",
-        foodController.foodQuantity,
-        foodController.foodCal,
-        foodController.foodBarcode,
-        Obx(() => dropdown(foodController)));
+      "Add Menu",
+      () => foodController.addFood(),
+      "Save",
+      "Cancel",
+      foodController.foodName,
+      "Menu Name",
+      "Quantity",
+      "Calorie",
+      "Barcode",
+      foodController.foodQuantity,
+      foodController.foodCal,
+      foodController.foodBarcode,
+      Obx(() => dropdown(foodController)),
+    );
   }
 
   Widget dropdown(FoodController foodController) {

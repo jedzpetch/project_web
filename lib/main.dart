@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:project_web/Constant/colors.dart';
-import 'package:project_web/controller/login_controller.dart';
+import 'package:project_web/view/exercise/editexercise_page.dart';
 import 'package:project_web/view/exercise/exercise_page.dart';
+import 'package:project_web/view/food/editfood_page.dart';
 import 'package:project_web/view/food/food_page.dart';
 import 'package:project_web/view/home_page.dart';
 import 'package:sizer/sizer.dart';
@@ -35,7 +35,9 @@ class MyApp extends StatelessWidget {
             GetPage(name: "/login", page: () => LoginPage()),
             GetPage(name: "/HomePage", page: () => HomePage()),
             GetPage(name: "/FoodPage", page: () => const FoodPage()),
-            GetPage(name: "/ExercisePage", page: () => const ExercisePage()),
+            GetPage(name: "/EditFoodPage", page: () => const EditFoodPage()),
+            GetPage(name: "/ExercisePage", page: () => ExercisePage()),
+            GetPage(name: "/EditExercisePage", page: () => EditExercisePage()),
           ],
           home: LoginPage());
     });

@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:project_web/Constant/colors.dart';
 import 'package:project_web/model/food_model.dart';
+import 'package:project_web/view/food/editfood_page.dart';
+import 'package:project_web/view/food/food_page.dart';
 import 'package:project_web/widget.dart';
 
 class FoodController extends GetxController with StateMixin {
@@ -31,6 +33,7 @@ class FoodController extends GetxController with StateMixin {
   static final material8 = TextEditingController();
   static final material9 = TextEditingController();
   static final material10 = TextEditingController();
+  RxList docid = [].obs;
 
   final List<PlutoRow> rows = <PlutoRow>[].obs;
   final List<String> foodCategory = [
@@ -41,32 +44,32 @@ class FoodController extends GetxController with StateMixin {
   ];
   final List<PlutoColumn> columns = [
     PlutoColumn(
-        title: "Category",
-        field: "category",
+        title: "หมวดหมู่",
+        field: "foodCategory",
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "Name",
-        field: 'name',
+        title: "ชื่อ",
+        field: 'foodName',
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "Quantity",
-        field: 'quantity',
+        title: "ปริมาณ",
+        field: 'foodQuantity',
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "Calorie",
-        field: 'calorie',
+        title: "แคลอรี่",
+        field: 'foodCal',
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
     PlutoColumn(
-        title: "Barcode",
-        field: 'barcode',
+        title: "บาร์โค้ด (ถ้ามี)",
+        field: 'foodBarcode',
         type: PlutoColumnType.text(),
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center),
@@ -80,8 +83,47 @@ class FoodController extends GetxController with StateMixin {
     super.onInit();
   }
 
+  void editRow(int rowIndex, Map<String, PlutoCell> newCells) {
+    rows[rowIndex].cells.assignAll(newCells);
+  }
+
+  editCell(int rowIndex, String columnName, String? newValue) async {
+    if (newValue != null) {
+      final updatedCells = Map<String, PlutoCell>.from(rows[rowIndex].cells);
+      updatedCells[columnName]!.value = newValue;
+      editRow(rowIndex, updatedCells);
+
+      Map<String, dynamic> data = {
+        columnName: newValue,
+      };
+
+      await updateFirebaseData(data, rowIndex);
+    } else {}
+  }
+
+  Future<void> deleteDataFromFirebase(int index) async {
+    await FirebaseFirestore.instance
+        .collection('FoodData')
+        .doc(docid[index])
+        .delete();
+  }
+
+  updateFirebaseData(Map<String, dynamic>? data, int index) async {
+    if (data != null) {
+      await FirebaseFirestore.instance
+          .collection('FoodData')
+          .doc(docid[index])
+          .update(data);
+    } else {}
+  }
+
   changeMode() {
     editmode.value = !editmode.value;
+    if (editmode.isTrue) {
+      Get.to(() => const EditFoodPage());
+    } else {
+      Get.to(() => const FoodPage());
+    }
   }
 
   changeCategory(String value) {
@@ -102,6 +144,10 @@ class FoodController extends GetxController with StateMixin {
   Future<void> getFoodData() async {
     QuerySnapshot querySnapshot = await firestore.collection("FoodData").get();
     List<DocumentSnapshot> docs = querySnapshot.docs;
+    for (var doc in docs) {
+      var id = doc.id;
+      docid.add(id);
+    }
     foodData.assignAll(docs.map((data) {
       return FoodModel(
         foodName: data["foodName"],
@@ -115,34 +161,32 @@ class FoodController extends GetxController with StateMixin {
   }
 
   void updateRows() async {
-    rows.assignAll(searchData.isEmpty
+    List<PlutoRow> updatedRows = searchData.isEmpty
         ? foodData.map((food) {
             return PlutoRow(
               cells: {
-                'category': PlutoCell(value: food.foodCategory),
-                'name': PlutoCell(value: food.foodName),
-                'quantity': PlutoCell(value: food.foodQuantity),
-                'calorie': PlutoCell(value: food.foodCal),
-                'barcode': PlutoCell(value: food.foodBarcode)
+                'foodCategory': PlutoCell(value: food.foodCategory ?? ''),
+                'foodName': PlutoCell(value: food.foodName ?? ''),
+                'foodQuantity': PlutoCell(value: food.foodQuantity ?? ''),
+                'foodCal': PlutoCell(value: food.foodCal ?? ''),
+                'foodBarcode': PlutoCell(value: food.foodBarcode ?? ''),
               },
             );
           }).toList()
         : searchData.map((food) {
             return PlutoRow(
               cells: {
-                'category': PlutoCell(value: food.foodCategory),
-                'name': PlutoCell(value: food.foodName),
-                'quantity': PlutoCell(value: food.foodQuantity),
-                'calorie': PlutoCell(value: food.foodCal),
-                'barcode': PlutoCell(value: food.foodBarcode)
+                'foodCategory': PlutoCell(value: food.foodCategory ?? ''),
+                'foodName': PlutoCell(value: food.foodName ?? ''),
+                'foodQuantity': PlutoCell(value: food.foodQuantity ?? ''),
+                'foodCal': PlutoCell(value: food.foodCal ?? ''),
+                'foodBarcode': PlutoCell(value: food.foodBarcode ?? '')
               },
             );
-          }).toList());
-    update();
-  }
+          }).toList();
 
-  updateFirebaseData(Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance.collection('FoodData').doc().update(data);
+    rows.assignAll(updatedRows);
+    update();
   }
 
   addFood() async {
