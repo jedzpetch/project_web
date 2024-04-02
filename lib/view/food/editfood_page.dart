@@ -117,7 +117,6 @@ class EditFoodPage extends StatelessWidget {
           final PlutoCell cell =
               rows[i].cells[columns[j].field] ?? PlutoCell(value: '');
           dataCells.add(DataCell(TextField(
-              readOnly: foodController.editmode.value,
               controller: TextEditingController(text: cell.value),
               onChanged: (value) {
                 foodController.editCell(i, columns[j].field, value);

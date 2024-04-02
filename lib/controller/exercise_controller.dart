@@ -239,6 +239,7 @@ class ExerciseController extends GetxController with StateMixin {
       } catch (e) {
         Get.isDialogOpen! ? Get.back() : null;
         Get.dialog(WidgetAll.dialog(FontAwesomeIcons.xmark, "$e", Colors.red));
+        debugPrint(e.toString());
       }
     }
   }
